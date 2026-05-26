@@ -5,6 +5,7 @@ import '../local/shared_prefs_manager.dart';
 
 class SharedPrefValue {
   static const String kUserToken = 'userToken';
+  static const String kUserLoginID = 'userLoginID';
 }
 
 class CacheRepositoryImpl implements ICacheRepository {
@@ -22,5 +23,17 @@ class CacheRepositoryImpl implements ICacheRepository {
   Future<void> saveToken(String token) async {
     // TODO: implement saveToken
     await SharedPref.write(SharedPrefValue.kUserToken, token);
+  }
+
+  @override
+  Future<String?> fetchLoginID() async {
+    // TODO: implement fetchLoginID
+    return await SharedPref.read(SharedPrefValue.kUserLoginID);
+  }
+
+  @override
+  Future<void> saveLoginID(String loginID) async {
+    // TODO: implement saveLoginID
+    await SharedPref.write(SharedPrefValue.kUserLoginID, loginID);
   }
 }

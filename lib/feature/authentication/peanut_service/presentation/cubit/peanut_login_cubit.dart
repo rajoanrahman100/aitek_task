@@ -1,4 +1,5 @@
 import 'package:aitek_task/core/di/service_locator.dart';
+import 'package:aitek_task/core/repositories/i_cache_repository.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/domain/entities/login_request_params.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/domain/usecases/peanut_login_use_case.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_state.dart';
@@ -24,11 +25,20 @@ class PeanutServiceLoginCubit extends Cubit<PeanutLoginState> {
         }
         emit(PeanutLoginFailure(errorMessage));
       },
-      (success) {
+      (success) async {
         if (success.result != true) {
           emit(const PeanutLoginFailure('Invalid login ID or password'));
           return;
         }
+
+        final token = success.token?.trim();
+        if (token == null || token.isEmpty) {
+          emit(const PeanutLoginFailure('Token was not found'));
+          return;
+        }
+
+        await sl<ICacheRepository>().saveLoginID(login.toString());
+        await sl<ICacheRepository>().saveToken(token);
 
         emit(PeanutLoginSuccess(success));
       },

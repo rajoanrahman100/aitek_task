@@ -19,30 +19,18 @@ final sl = GetIt.instance;
 Future<void> setupServiceLocator() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
-  sl.registerLazySingleton<ICacheRepository>(
-    () => CacheRepositoryImpl(sharedPreference: sl()),
-  );
+  sl.registerLazySingleton<ICacheRepository>(() => CacheRepositoryImpl(sharedPreference: sl()));
   sl.registerLazySingleton<DioClient>(() => DioClient());
 
   //Api Services
-  sl.registerLazySingleton<PeanutAuthRemoteDataSource>(
-    () => PeanutAuthRemoteDataSourceImpl(),
-  );
-  sl.registerLazySingleton<PartnerAuthRemoteDataSource>(
-    () => PartnerAuthRemoteDataSourceImpl(),
-  );
+  sl.registerLazySingleton<PeanutAuthRemoteDataSource>(() => PeanutAuthRemoteDataSourceImpl());
+  sl.registerLazySingleton<PartnerAuthRemoteDataSource>(() => PartnerAuthRemoteDataSourceImpl());
 
   //Repositories
-  sl.registerLazySingleton<PeanutAuthRepository>(
-    () => PeanutAuthRepositoryImpl(),
-  );
-  sl.registerLazySingleton<PartnerAuthRepository>(
-    () => PartnerAuthRepositoryImpl(),
-  );
+  sl.registerLazySingleton<PeanutAuthRepository>(() => PeanutAuthRepositoryImpl());
+  sl.registerLazySingleton<PartnerAuthRepository>(() => PartnerAuthRepositoryImpl());
 
   //Use Cases
-  sl.registerLazySingleton<PeanutServiceLoginUseCase>(
-    () => PeanutServiceLoginUseCase(),
-  );
+  sl.registerLazySingleton<PeanutServiceLoginUseCase>(() => PeanutServiceLoginUseCase());
   sl.registerLazySingleton<PartnerLoginUseCase>(() => PartnerLoginUseCase());
 }

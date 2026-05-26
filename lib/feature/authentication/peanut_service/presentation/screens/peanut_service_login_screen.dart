@@ -1,4 +1,6 @@
+import 'package:aitek_task/core/home_screen.dart';
 import 'package:aitek_task/core/theme/style.dart';
+import 'package:aitek_task/core/utils/app_navigation.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
 import 'package:aitek_task/core/widgets/custom_text_field.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_cubit.dart';
@@ -81,6 +83,8 @@ class _PeanutServiceLoginScreenState extends State<PeanutServiceLoginScreen> {
         }
 
         if (state is PeanutLoginSuccess) {
+
+          AppNavigator.push(context, HomeScreen());
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(const SnackBar(content: Text('Login successful')));

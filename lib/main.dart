@@ -1,12 +1,11 @@
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_cubit.dart';
-import 'package:aitek_task/feature/authentication/partner_service/presentation/screens/partner_service_login_screen.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_cubit.dart';
+import 'package:aitek_task/landing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'core/di/service_locator.dart';
-import 'feature/authentication/peanut_service/presentation/screens/peanut_service_login_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +29,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-        home: PartnerServiceLoginScreen(),
+        home: const LandingScreen(),
       ),
     );
   }
