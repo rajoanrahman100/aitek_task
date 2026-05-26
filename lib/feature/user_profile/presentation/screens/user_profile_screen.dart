@@ -4,6 +4,7 @@ import 'package:aitek_task/core/theme/colors.dart';
 import 'package:aitek_task/core/theme/style.dart';
 import 'package:aitek_task/core/utils/app_navigation.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
+import 'package:aitek_task/core/widgets/responsive_content.dart';
 import 'package:aitek_task/feature/user_profile/data/models/user_information_response_model.dart';
 import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_state.dart';
@@ -51,25 +52,27 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         ],
       ),
       body: SafeArea(
-        child: BlocBuilder<UserProfileCubit, UserProfileState>(
-          builder: (context, state) {
-            if (state is UserProfileLoading || state is UserProfileInitial) {
-              return const Center(child: CircularProgressIndicator());
-            }
+        child: ResponsiveContent(
+          child: BlocBuilder<UserProfileCubit, UserProfileState>(
+            builder: (context, state) {
+              if (state is UserProfileLoading || state is UserProfileInitial) {
+                return const Center(child: CircularProgressIndicator());
+              }
 
-            if (state is UserProfileFailure) {
-              return _FailureView(message: state.message);
-            }
+              if (state is UserProfileFailure) {
+                return _FailureView(message: state.message);
+              }
 
-            if (state is UserProfileSuccess) {
-              return _ProfileContent(
-                userInformation: state.userInformation,
-                lastFourPhoneNumber: state.lastFourPhoneNumber,
-              );
-            }
+              if (state is UserProfileSuccess) {
+                return _ProfileContent(
+                  userInformation: state.userInformation,
+                  lastFourPhoneNumber: state.lastFourPhoneNumber,
+                );
+              }
 
-            return const SizedBox.shrink();
-          },
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );
@@ -83,28 +86,39 @@ class _FailureView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, size: 54, color: Colors.redAccent),
-          const SizedBox(height: 14),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: kMediumTextStyle.copyWith(fontSize: 16),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight - 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  size: 54,
+                  color: Colors.redAccent,
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: kMediumTextStyle.copyWith(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  title: 'Try Again',
+                  textColor: Colors.white,
+                  onPress: () {
+                    context.read<UserProfileCubit>().getAccountInformation();
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
-          CustomButton(
-            title: 'Try Again',
-            textColor: Colors.white,
-            onPress: () {
-              context.read<UserProfileCubit>().getAccountInformation();
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

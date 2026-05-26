@@ -4,6 +4,7 @@ import 'package:aitek_task/core/theme/colors.dart';
 import 'package:aitek_task/core/theme/style.dart';
 import 'package:aitek_task/core/utils/app_navigation.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
+import 'package:aitek_task/core/widgets/responsive_content.dart';
 import 'package:aitek_task/feature/partner_signal_archive/data/models/trading_signal_request_model.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/cubit/partner_signal_archive_cubit.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/cubit/partner_signal_archive_state.dart';
@@ -91,120 +92,122 @@ class _PartnerSignalArchiveScreenState
         ],
       ),
       body: SafeArea(
-        child: BlocConsumer<PartnerSignalArchiveCubit, PartnerSignalArchiveState>(
-          listener: (context, state) {
-            if (state is PartnerSignalArchiveFailure) {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(SnackBar(content: Text(state.message)));
-            }
-          },
-          builder: (context, state) {
-            final isLoading = state is PartnerSignalArchiveLoading;
+        child: ResponsiveContent(
+          child: BlocConsumer<PartnerSignalArchiveCubit, PartnerSignalArchiveState>(
+            listener: (context, state) {
+              if (state is PartnerSignalArchiveFailure) {
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
+              }
+            },
+            builder: (context, state) {
+              final isLoading = state is PartnerSignalArchiveLoading;
 
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView(
-                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
-                    children: [
-                      Text(
-                        'Trading signals',
-                        style: kBoldTextStyle.copyWith(fontSize: 24),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Select pairs and a date range to load Partner signal history.',
-                        style: kRegularTextStyle.copyWith(
-                          color: Colors.black54,
-                          height: 1.35,
+              return Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                      children: [
+                        Text(
+                          'Trading signals',
+                          style: kBoldTextStyle.copyWith(fontSize: 24),
                         ),
-                      ),
-                      const SizedBox(height: 22),
-                      Text('Currency pairs', style: kMediumTextStyle),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        children: _availablePairs.map((pair) {
-                          final selected = _selectedPairs.contains(pair);
-                          return FilterChip(
-                            label: Text(pair),
-                            selected: selected,
-                            onSelected: isLoading
-                                ? null
-                                : (value) {
-                                    setState(() {
-                                      if (value) {
-                                        _selectedPairs.add(pair);
-                                      } else {
-                                        _selectedPairs.remove(pair);
-                                      }
-                                    });
-                                  },
-                            selectedColor: AppColor.primary.withValues(
-                              alpha: 0.14,
-                            ),
-                            checkmarkColor: AppColor.primary,
-                          );
-                        }).toList(),
-                      ),
-                      const SizedBox(height: 22),
-                      Text('Date range', style: kMediumTextStyle),
-                      const SizedBox(height: 10),
-                      InkWell(
-                        onTap: isLoading ? null : _pickDateRange,
-                        borderRadius: BorderRadius.circular(12),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 14,
-                            vertical: 14,
+                        const SizedBox(height: 8),
+                        Text(
+                          'Select pairs and a date range to load Partner signal history.',
+                          style: kRegularTextStyle.copyWith(
+                            color: Colors.black54,
+                            height: 1.35,
                           ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.black12),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.date_range_outlined, size: 20),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: Text(
-                                  '${_formatDate(_dateRange.start)} - ${_formatDate(_dateRange.end)}',
-                                  style: kRegularTextStyle,
-                                ),
+                        ),
+                        const SizedBox(height: 22),
+                        Text('Currency pairs', style: kMediumTextStyle),
+                        const SizedBox(height: 10),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: _availablePairs.map((pair) {
+                            final selected = _selectedPairs.contains(pair);
+                            return FilterChip(
+                              label: Text(pair),
+                              selected: selected,
+                              onSelected: isLoading
+                                  ? null
+                                  : (value) {
+                                      setState(() {
+                                        if (value) {
+                                          _selectedPairs.add(pair);
+                                        } else {
+                                          _selectedPairs.remove(pair);
+                                        }
+                                      });
+                                    },
+                              selectedColor: AppColor.primary.withValues(
+                                alpha: 0.14,
                               ),
-                            ],
+                              checkmarkColor: AppColor.primary,
+                            );
+                          }).toList(),
+                        ),
+                        const SizedBox(height: 22),
+                        Text('Date range', style: kMediumTextStyle),
+                        const SizedBox(height: 10),
+                        InkWell(
+                          onTap: isLoading ? null : _pickDateRange,
+                          borderRadius: BorderRadius.circular(12),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 14,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(color: Colors.black12),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.date_range_outlined, size: 20),
+                                const SizedBox(width: 10),
+                                Expanded(
+                                  child: Text(
+                                    '${_formatDate(_dateRange.start)} - ${_formatDate(_dateRange.end)}',
+                                    style: kRegularTextStyle,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 22),
-                      _SignalStateView(state: state),
-                    ],
+                        const SizedBox(height: 22),
+                        _SignalStateView(state: state),
+                      ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
-                  child: CustomButton(
-                    title: 'Load Signals',
-                    textColor: Colors.white,
-                    onPress: isLoading ? null : _loadSignals,
-                    child: isLoading
-                        ? const SizedBox(
-                            width: 22,
-                            height: 22,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.white,
-                            ),
-                          )
-                        : null,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                    child: CustomButton(
+                      title: 'Load Signals',
+                      textColor: Colors.white,
+                      onPress: isLoading ? null : _loadSignals,
+                      child: isLoading
+                          ? const SizedBox(
+                              width: 22,
+                              height: 22,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            )
+                          : null,
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

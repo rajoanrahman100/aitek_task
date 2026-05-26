@@ -1,6 +1,7 @@
 import 'package:aitek_task/core/theme/colors.dart';
 import 'package:aitek_task/core/theme/style.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
+import 'package:aitek_task/core/widgets/responsive_content.dart';
 import 'package:aitek_task/feature/promo_materials/data/models/promo_material_model.dart';
 import 'package:aitek_task/feature/promo_materials/presentation/cubit/promo_materials_cubit.dart';
 import 'package:aitek_task/feature/promo_materials/presentation/cubit/promo_materials_state.dart';
@@ -41,45 +42,47 @@ class _PromoMaterialsScreenState extends State<PromoMaterialsScreen> {
         surfaceTintColor: Colors.white,
       ),
       body: SafeArea(
-        child: BlocBuilder<PromoMaterialsCubit, PromoMaterialsState>(
-          builder: (context, state) {
-            if (state is PromoMaterialsLoading ||
-                state is PromoMaterialsInitial) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is PromoMaterialsFailure) {
-              return _FailureView(message: state.message);
-            }
-
-            if (state is PromoMaterialsSuccess) {
-              if (state.materials.isEmpty) {
-                return const _EmptyView();
+        child: ResponsiveContent(
+          child: BlocBuilder<PromoMaterialsCubit, PromoMaterialsState>(
+            builder: (context, state) {
+              if (state is PromoMaterialsLoading ||
+                  state is PromoMaterialsInitial) {
+                return const Center(child: CircularProgressIndicator());
               }
 
-              return RefreshIndicator(
-                onRefresh: () {
-                  return context
-                      .read<PromoMaterialsCubit>()
-                      .getPromoMaterials();
-                },
-                child: ListView.separated(
-                  padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
-                  itemCount: state.materials.length,
-                  separatorBuilder: (_, _) => const SizedBox(height: 14),
-                  itemBuilder: (context, index) {
-                    final material = state.materials[index];
-                    return _PromoCard(
-                      material: material,
-                      onOpen: () => _openLink(material.linkUrl),
-                    );
-                  },
-                ),
-              );
-            }
+              if (state is PromoMaterialsFailure) {
+                return _FailureView(message: state.message);
+              }
 
-            return const SizedBox.shrink();
-          },
+              if (state is PromoMaterialsSuccess) {
+                if (state.materials.isEmpty) {
+                  return const _EmptyView();
+                }
+
+                return RefreshIndicator(
+                  onRefresh: () {
+                    return context
+                        .read<PromoMaterialsCubit>()
+                        .getPromoMaterials();
+                  },
+                  child: ListView.separated(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 28),
+                    itemCount: state.materials.length,
+                    separatorBuilder: (_, _) => const SizedBox(height: 14),
+                    itemBuilder: (context, index) {
+                      final material = state.materials[index];
+                      return _PromoCard(
+                        material: material,
+                        onOpen: () => _openLink(material.linkUrl),
+                      );
+                    },
+                  ),
+                );
+              }
+
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );
@@ -93,28 +96,39 @@ class _FailureView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, color: Colors.redAccent, size: 54),
-          const SizedBox(height: 14),
-          Text(
-            message,
-            textAlign: TextAlign.center,
-            style: kMediumTextStyle.copyWith(fontSize: 16),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight - 40),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(
+                  Icons.error_outline,
+                  color: Colors.redAccent,
+                  size: 54,
+                ),
+                const SizedBox(height: 14),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: kMediumTextStyle.copyWith(fontSize: 16),
+                ),
+                const SizedBox(height: 20),
+                CustomButton(
+                  title: 'Try Again',
+                  textColor: Colors.white,
+                  onPress: () {
+                    context.read<PromoMaterialsCubit>().getPromoMaterials();
+                  },
+                ),
+              ],
+            ),
           ),
-          const SizedBox(height: 20),
-          CustomButton(
-            title: 'Try Again',
-            textColor: Colors.white,
-            onPress: () {
-              context.read<PromoMaterialsCubit>().getPromoMaterials();
-            },
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
