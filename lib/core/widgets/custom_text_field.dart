@@ -1,8 +1,6 @@
 import 'package:aitek_task/core/theme/style.dart';
 import 'package:flutter/material.dart';
 
-
-
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? hintText;
@@ -37,7 +35,8 @@ class CustomTextField extends StatelessWidget {
     this.cursorColor = Colors.black,
     this.isError = false,
     this.enabled = true,
-    this.borderRadius = const BorderRadius.all(Radius.circular(10.0)),this.fillColor=Colors.transparent,
+    this.borderRadius = const BorderRadius.all(Radius.circular(10.0)),
+    this.fillColor = Colors.transparent,
     this.maxLength,
     this.maxLine,
     this.showCounter = false,
@@ -46,8 +45,12 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: ((maxLength != null || maxLine!=null) && showCounter) ? 72 : 52,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        minHeight: ((maxLength != null || maxLine != null) && showCounter)
+            ? 72
+            : 52,
+      ),
       child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
@@ -58,44 +61,63 @@ class CustomTextField extends StatelessWidget {
         cursorColor: cursorColor,
         enabled: enabled,
         maxLength: maxLength,
-        maxLines: maxLine,
-
+        maxLines: obscureText ? 1 : maxLine,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 16.0),
+          contentPadding: const EdgeInsets.symmetric(
+            vertical: 10.0,
+            horizontal: 16.0,
+          ),
           hintText: hintText,
           filled: true,
           fillColor: fillColor,
           suffixIcon: suffixIcon,
           prefixIcon: prefixIcon,
-          errorStyle: TextStyle(color: Colors.redAccent),
-          suffixIconConstraints: BoxConstraints(minHeight: 18, minWidth: 18),
-          prefixIconConstraints: BoxConstraints(minHeight: 18, minWidth: 18),
+          errorStyle: const TextStyle(color: Colors.redAccent),
+          suffixIconConstraints: const BoxConstraints(
+            minHeight: 18,
+            minWidth: 18,
+          ),
+          prefixIconConstraints: const BoxConstraints(
+            minHeight: 18,
+            minWidth: 18,
+          ),
           counterText: maxLength != null && !showCounter ? '' : null,
           counterStyle: counterStyle,
           border: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: isError ? Colors.redAccent : Colors.black12, width: 1),
-
+            borderSide: BorderSide(
+              color: isError ? Colors.redAccent : Colors.black12,
+              width: 1,
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: isError ? Colors.redAccent : Colors.black12, width: 1),
+            borderSide: BorderSide(
+              color: isError ? Colors.redAccent : Colors.black12,
+              width: 1,
+            ),
           ),
           disabledBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: enabled ? Colors.redAccent : Colors.black12, width: 1),
+            borderSide: BorderSide(
+              color: enabled ? Colors.redAccent : Colors.black12,
+              width: 1,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: isError ? Colors.redAccent : Colors.black12, width: 1),
+            borderSide: BorderSide(
+              color: isError ? Colors.redAccent : Colors.black12,
+              width: 1,
+            ),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide: BorderSide(color: Colors.redAccent, width: 1),
+            borderSide: const BorderSide(color: Colors.redAccent, width: 1),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: borderRadius,
-            borderSide:  BorderSide(color: Colors.redAccent, width: 1),
+            borderSide: const BorderSide(color: Colors.redAccent, width: 1),
           ),
         ),
       ),

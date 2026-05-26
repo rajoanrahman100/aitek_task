@@ -14,11 +14,18 @@ class NetworkException implements Exception {
 }
 
 class ConnectionException extends NetworkException {
-  ConnectionException({super.message = 'Connection timed out. Please check your internet connection.'});
+  ConnectionException({
+    super.message =
+        'Connection timed out. Please check your internet connection.',
+  });
 }
 
 class ServerResponseException extends NetworkException {
-  ServerResponseException({required super.message, required super.statusCode, super.responseData});
+  ServerResponseException({
+    required super.message,
+    required super.statusCode,
+    super.responseData,
+  });
 }
 
 class NoInternetException extends NetworkException {
@@ -26,7 +33,11 @@ class NoInternetException extends NetworkException {
 }
 
 class UnauthorizedException extends NetworkException {
-  UnauthorizedException({super.message = 'Unauthorized. Please check your credentials.', super.statusCode = 401, super.responseData});
+  UnauthorizedException({
+    super.message = 'Unauthorized. Please check your credentials.',
+    super.statusCode = 401,
+    super.responseData,
+  });
 }
 
 class UnknownNetworkException extends NetworkException {
@@ -42,7 +53,7 @@ class DioClient {
     _dio.options.connectTimeout = const Duration(seconds: 15);
     _dio.options.receiveTimeout = const Duration(seconds: 15);
     _dio.options.sendTimeout = const Duration(seconds: 15);
-    
+
     // Add custom logging interceptor
     _dio.interceptors.add(_LoggingInterceptor());
   }
@@ -51,11 +62,18 @@ class DioClient {
   String _buildUrl(String path, String? baseUrl) {
     final cleanPath = path.trim();
     if (baseUrl == null) return cleanPath;
+    if (baseUrl.trim().isEmpty) {
+      throw UnknownNetworkException(message: 'Base URL is not configured.');
+    }
     if (cleanPath.startsWith('http://') || cleanPath.startsWith('https://')) {
       return cleanPath;
     }
-    final cleanBaseUrl = baseUrl.endsWith('/') ? baseUrl : '$baseUrl/';
-    final cleanRelativePath = cleanPath.startsWith('/') ? cleanPath.substring(1) : cleanPath;
+    final cleanBaseUrl = baseUrl.trim().endsWith('/')
+        ? baseUrl.trim()
+        : '${baseUrl.trim()}/';
+    final cleanRelativePath = cleanPath.startsWith('/')
+        ? cleanPath.substring(1)
+        : cleanPath;
     return '$cleanBaseUrl$cleanRelativePath';
   }
 
@@ -124,9 +142,10 @@ class DioClient {
         return ConnectionException();
       case DioExceptionType.badResponse:
         final statusCode = e.response?.statusCode;
-        final statusMessage = e.response?.statusMessage ?? 'Bad response from server';
+        final statusMessage =
+            e.response?.statusMessage ?? 'Bad response from server';
         final errorData = e.response?.data;
-        
+
         if (statusCode == 401) {
           return UnauthorizedException(responseData: errorData);
         }
@@ -137,13 +156,22 @@ class DioClient {
         } else if (errorData != null) {
           errorMsg = errorData.toString();
         }
-        return ServerResponseException(message: errorMsg, statusCode: statusCode, responseData: errorData);
+        return ServerResponseException(
+          message: errorMsg,
+          statusCode: statusCode,
+          responseData: errorData,
+        );
       case DioExceptionType.cancel:
         return NetworkException(message: 'Request was cancelled.');
       case DioExceptionType.connectionError:
-        return ConnectionException(message: 'Failed to connect to the server. Please check your internet connection.');
+        return ConnectionException(
+          message:
+              'Failed to connect to the server. Please check your internet connection.',
+        );
       default:
-        return UnknownNetworkException(message: e.message ?? 'An unknown network error occurred.');
+        return UnknownNetworkException(
+          message: e.message ?? 'An unknown network error occurred.',
+        );
     }
   }
 }
@@ -169,7 +197,9 @@ class _LoggingInterceptor extends Interceptor {
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    logger.i('<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.uri}');
+    logger.i(
+      '<-- ${response.statusCode} ${response.requestOptions.method} ${response.requestOptions.uri}',
+    );
     logger.d('Response Body: ${response.data}');
     super.onResponse(response, handler);
   }

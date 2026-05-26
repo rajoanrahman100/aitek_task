@@ -18,12 +18,18 @@ class PeanutServiceLoginCubit extends Cubit<PeanutLoginState> {
     result.fold(
       (failure) {
         String errorMessage = failure.title ?? 'Authentication failed';
-        if (failure.errors?.login != null && failure.errors!.login!.isNotEmpty) {
+        if (failure.errors?.login != null &&
+            failure.errors!.login!.isNotEmpty) {
           errorMessage = failure.errors!.login!.join(', ');
         }
         emit(PeanutLoginFailure(errorMessage));
       },
       (success) {
+        if (success.result != true) {
+          emit(const PeanutLoginFailure('Invalid login ID or password'));
+          return;
+        }
+
         emit(PeanutLoginSuccess(success));
       },
     );

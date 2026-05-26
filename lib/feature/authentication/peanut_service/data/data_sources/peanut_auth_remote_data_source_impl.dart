@@ -10,7 +10,10 @@ import 'package:dartz/dartz.dart';
 
 class PeanutAuthRemoteDataSourceImpl extends PeanutAuthRemoteDataSource {
   @override
-  Future<Either<AccountCredentialErrorResponseModel, AccountCredentialResponseModel>> peanutServiceLogin(LoginReqParams params) async {
+  Future<
+    Either<AccountCredentialErrorResponseModel, AccountCredentialResponseModel>
+  >
+  peanutServiceLogin(LoginReqParams params) async {
     try {
       final response = await sl<DioClient>().post(
         ApiEndpoints.isAccountCredentialsCorrect,
@@ -21,13 +24,27 @@ class PeanutAuthRemoteDataSourceImpl extends PeanutAuthRemoteDataSource {
       // Status 200: Success authentication
       return Right(AccountCredentialResponseModel.fromJson(response.data));
     } on NetworkException catch (e) {
-      logger.w("Network error in peanutServiceLogin (Status: ${e.statusCode}): ${e.message}\nResponse Data: ${e.responseData}");
+      logger.w(
+        "Network error in peanutServiceLogin (Status: ${e.statusCode}): ${e.message}\nResponse Data: ${e.responseData}",
+      );
       if (e.statusCode == 401 && e.responseData != null) {
-        // Status 401: Unauthorized (Incorrect credentials), return response model
-        return Right(AccountCredentialResponseModel.fromJson(e.responseData));
+        final response = AccountCredentialResponseModel.fromJson(
+          e.responseData,
+        );
+        return Left(
+          AccountCredentialErrorResponseModel(
+            title: response.result == false
+                ? 'Invalid login ID or password'
+                : e.message,
+            status: e.statusCode,
+            errors: Errors(login: ['Invalid login ID or password']),
+          ),
+        );
       } else if (e.statusCode == 400 && e.responseData != null) {
         // Status 400: Validation error, return validation error response model
-        return Left(AccountCredentialErrorResponseModel.fromJson(e.responseData));
+        return Left(
+          AccountCredentialErrorResponseModel.fromJson(e.responseData),
+        );
       } else {
         // Other NetworkException (timeout, 500, etc.)
         return Left(
@@ -39,7 +56,11 @@ class PeanutAuthRemoteDataSourceImpl extends PeanutAuthRemoteDataSource {
         );
       }
     } catch (e, stackTrace) {
-      logger.e("Unexpected exception in peanutServiceLogin", error: e, stackTrace: stackTrace);
+      logger.e(
+        "Unexpected exception in peanutServiceLogin",
+        error: e,
+        stackTrace: stackTrace,
+      );
       // General error
       return Left(
         AccountCredentialErrorResponseModel(
