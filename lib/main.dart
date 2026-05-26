@@ -2,6 +2,7 @@ import 'package:aitek_task/feature/authentication/partner_service/presentation/c
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_cubit.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/cubit/partner_signal_archive_cubit.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/partner_signal_archive_screen.dart';
+import 'package:aitek_task/feature/promo_materials/presentation/cubit/promo_materials_cubit.dart';
 import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:aitek_task/feature/user_profile/presentation/screens/user_profile_screen.dart';
 import 'package:aitek_task/landing_screen.dart';
@@ -27,7 +28,10 @@ class MyApp extends StatelessWidget {
 
     final partnerLoginId = await cache.fetchPartnerLoginID();
     final partnerToken = await cache.fetchPartnerToken();
-    final hasPartnerSession = int.tryParse(partnerLoginId ?? '') != null && partnerToken != null && partnerToken.trim().isNotEmpty;
+    final hasPartnerSession =
+        int.tryParse(partnerLoginId ?? '') != null &&
+        partnerToken != null &&
+        partnerToken.trim().isNotEmpty;
 
     if (hasPartnerSession) {
       return _StartupDestination.partnerSignals;
@@ -35,7 +39,10 @@ class MyApp extends StatelessWidget {
 
     final peanutLoginId = await cache.fetchLoginID();
     final peanutToken = await cache.fetchToken();
-    final hasPeanutSession = int.tryParse(peanutLoginId ?? '') != null && peanutToken != null && peanutToken.trim().isNotEmpty;
+    final hasPeanutSession =
+        int.tryParse(peanutLoginId ?? '') != null &&
+        peanutToken != null &&
+        peanutToken.trim().isNotEmpty;
 
     if (hasPeanutSession) {
       return _StartupDestination.peanutProfile;
@@ -52,6 +59,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => PeanutServiceLoginCubit()),
         BlocProvider(create: (context) => PartnerLoginCubit()),
         BlocProvider(create: (context) => PartnerSignalArchiveCubit()),
+        BlocProvider(create: (context) => PromoMaterialsCubit()),
         BlocProvider(create: (context) => UserProfileCubit()),
       ],
       child: MaterialApp(
@@ -62,7 +70,9 @@ class MyApp extends StatelessWidget {
           future: _startupDestination(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return const Scaffold(body: Center(child: CircularProgressIndicator()));
+              return const Scaffold(
+                body: Center(child: CircularProgressIndicator()),
+              );
             }
 
             switch (snapshot.data) {

@@ -4,6 +4,7 @@ abstract final class ApiEndpoints {
   static final peanutBaseUrl = dotenv.env['PEANUT_BASE_URL'] ?? '';
   static final partnerBaseUrl = dotenv.env['PARTNER_BASE_URL'] ?? '';
   static final partnerClientMobileBaseUrl = partnerBaseUrl.replaceFirst(RegExp(r'/api/?$'), '/clientmobile/');
+  static const promoSoapUrl = 'https://api-forexcopy.contentdatapro.com/Services/CabinetMicroService.svc';
 
   static const isAccountCredentialsCorrect = 'ClientCabinetBasic/IsAccountCredentialsCorrect';
   static const getLastFourPhoneNumber = 'ClientCabinetBasic/GetLastFourNumbersPhone';
