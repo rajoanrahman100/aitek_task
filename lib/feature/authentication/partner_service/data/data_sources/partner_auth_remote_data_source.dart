@@ -4,5 +4,6 @@ import 'package:aitek_task/feature/authentication/partner_service/domain/entitie
 import 'package:dartz/dartz.dart';
 
 abstract class PartnerAuthRemoteDataSource {
-  Future<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>> requestMobileCabinetApiToken(PartnerLoginRequestParams params);
+  Future<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>>
+  requestMobileCabinetApiToken(PartnerLoginRequestParams params);
 }

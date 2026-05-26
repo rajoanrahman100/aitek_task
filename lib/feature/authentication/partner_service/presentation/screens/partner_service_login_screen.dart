@@ -1,8 +1,10 @@
 import 'package:aitek_task/core/theme/style.dart';
+import 'package:aitek_task/core/utils/app_navigation.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
 import 'package:aitek_task/core/widgets/custom_text_field.dart';
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_cubit.dart';
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_state.dart';
+import 'package:aitek_task/feature/partner_signal_archive/presentation/partner_signal_archive_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -80,6 +82,7 @@ class _PartnerServiceLoginScreenState extends State<PartnerServiceLoginScreen> {
         }
 
         if (state is PartnerLoginSuccess) {
+          AppNavigator.push(context, const PartnerSignalArchiveScreen());
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(const SnackBar(content: Text('Login successful')));
@@ -165,7 +168,7 @@ class _PartnerServiceLoginScreenState extends State<PartnerServiceLoginScreen> {
                     child: CustomButton(
                       title: 'Continue',
                       textColor: Colors.white,
-                      onPress:_submitLogin,
+                      onPress: _submitLogin,
                       child: isLoading
                           ? const SizedBox(
                               width: 22,

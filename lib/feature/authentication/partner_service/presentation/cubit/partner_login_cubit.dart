@@ -1,4 +1,5 @@
 import 'package:aitek_task/core/di/service_locator.dart';
+import 'package:aitek_task/core/repositories/i_cache_repository.dart';
 import 'package:aitek_task/feature/authentication/partner_service/domain/entities/partner_login_request_params.dart';
 import 'package:aitek_task/feature/authentication/partner_service/domain/usecases/partner_login_use_case.dart';
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_state.dart';
@@ -18,11 +19,14 @@ class PartnerLoginCubit extends Cubit<PartnerLoginState> {
       (failure) {
         emit(PartnerLoginFailure(failure.message ?? 'Authentication failed'));
       },
-      (success) {
+      (success) async {
         if (!success.hasToken) {
           emit(const PartnerLoginFailure('Authentication failed'));
           return;
         }
+
+        await sl<ICacheRepository>().savePartnerLoginID(login.toString());
+        await sl<ICacheRepository>().savePartnerToken(success.token!.trim());
 
         emit(PartnerLoginSuccess(success));
       },

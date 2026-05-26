@@ -11,6 +11,11 @@ import 'package:aitek_task/feature/authentication/peanut_service/data/data_sourc
 import 'package:aitek_task/feature/authentication/peanut_service/data/repositories/peanut_auth_repository_impl.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/domain/repositories/peanut_auth_repository.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/domain/usecases/peanut_login_use_case.dart';
+import 'package:aitek_task/feature/partner_signal_archive/data/data_sources/partner_signal_archive_remote_data_source.dart';
+import 'package:aitek_task/feature/partner_signal_archive/data/data_sources/partner_signal_archive_remote_data_source_impl.dart';
+import 'package:aitek_task/feature/partner_signal_archive/data/repositories/partner_signal_archive_repository_impl.dart';
+import 'package:aitek_task/feature/partner_signal_archive/domain/repositories/partner_signal_archive_repository.dart';
+import 'package:aitek_task/feature/partner_signal_archive/domain/usecases/get_analytic_signals_use_case.dart';
 import 'package:aitek_task/feature/user_profile/data/data_sources/user_profile_remote_data_source.dart';
 import 'package:aitek_task/feature/user_profile/data/data_sources/user_profile_remote_data_source_impl.dart';
 import 'package:aitek_task/feature/user_profile/data/repositories/user_profile_repository_impl.dart';
@@ -25,42 +30,25 @@ final sl = GetIt.instance;
 Future<void> setupServiceLocator() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);
-  sl.registerLazySingleton<ICacheRepository>(
-    () => CacheRepositoryImpl(sharedPreference: sl()),
-  );
+  sl.registerLazySingleton<ICacheRepository>(() => CacheRepositoryImpl(sharedPreference: sl()));
   sl.registerLazySingleton<DioClient>(() => DioClient());
 
   //Api Services
-  sl.registerLazySingleton<PeanutAuthRemoteDataSource>(
-    () => PeanutAuthRemoteDataSourceImpl(),
-  );
-  sl.registerLazySingleton<PartnerAuthRemoteDataSource>(
-    () => PartnerAuthRemoteDataSourceImpl(),
-  );
-  sl.registerLazySingleton<UserProfileRemoteDataSource>(
-    () => UserProfileRemoteDataSourceImpl(),
-  );
+  sl.registerLazySingleton<PeanutAuthRemoteDataSource>(() => PeanutAuthRemoteDataSourceImpl());
+  sl.registerLazySingleton<PartnerAuthRemoteDataSource>(() => PartnerAuthRemoteDataSourceImpl());
+  sl.registerLazySingleton<PartnerSignalArchiveRemoteDataSource>(() => PartnerSignalArchiveRemoteDataSourceImpl());
+  sl.registerLazySingleton<UserProfileRemoteDataSource>(() => UserProfileRemoteDataSourceImpl());
 
   //Repositories
-  sl.registerLazySingleton<PeanutAuthRepository>(
-    () => PeanutAuthRepositoryImpl(),
-  );
-  sl.registerLazySingleton<PartnerAuthRepository>(
-    () => PartnerAuthRepositoryImpl(),
-  );
-  sl.registerLazySingleton<UserProfileRepository>(
-    () => UserProfileRepositoryImpl(),
-  );
+  sl.registerLazySingleton<PeanutAuthRepository>(() => PeanutAuthRepositoryImpl());
+  sl.registerLazySingleton<PartnerAuthRepository>(() => PartnerAuthRepositoryImpl());
+  sl.registerLazySingleton<PartnerSignalArchiveRepository>(() => PartnerSignalArchiveRepositoryImpl());
+  sl.registerLazySingleton<UserProfileRepository>(() => UserProfileRepositoryImpl());
 
   //Use Cases
-  sl.registerLazySingleton<PeanutServiceLoginUseCase>(
-    () => PeanutServiceLoginUseCase(),
-  );
+  sl.registerLazySingleton<PeanutServiceLoginUseCase>(() => PeanutServiceLoginUseCase());
   sl.registerLazySingleton<PartnerLoginUseCase>(() => PartnerLoginUseCase());
-  sl.registerLazySingleton<GetAccountInformationUseCase>(
-    () => GetAccountInformationUseCase(),
-  );
-  sl.registerLazySingleton<GetLastFourPhoneNumberUseCase>(
-    () => GetLastFourPhoneNumberUseCase(),
-  );
+  sl.registerLazySingleton<GetAnalyticSignalsUseCase>(() => GetAnalyticSignalsUseCase());
+  sl.registerLazySingleton<GetAccountInformationUseCase>(() => GetAccountInformationUseCase());
+  sl.registerLazySingleton<GetLastFourPhoneNumberUseCase>(() => GetLastFourPhoneNumberUseCase());
 }
