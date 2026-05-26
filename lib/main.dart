@@ -1,3 +1,5 @@
+import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_cubit.dart';
+import 'package:aitek_task/feature/authentication/partner_service/presentation/screens/partner_service_login_screen.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,14 +24,14 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => PeanutServiceLoginCubit()),
+        BlocProvider(create: (context) => PartnerLoginCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-        home: PeanutServiceLoginScreen(),
+        home: PartnerServiceLoginScreen(),
       ),
     );
   }
 }
-
