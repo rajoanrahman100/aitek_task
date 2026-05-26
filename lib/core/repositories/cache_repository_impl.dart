@@ -36,4 +36,10 @@ class CacheRepositoryImpl implements ICacheRepository {
     // TODO: implement saveLoginID
     await SharedPref.write(SharedPrefValue.kUserLoginID, loginID);
   }
+
+  @override
+  Future<void> clearSession() async {
+    await SharedPref.remove(SharedPrefValue.kUserToken);
+    await SharedPref.remove(SharedPrefValue.kUserLoginID);
+  }
 }

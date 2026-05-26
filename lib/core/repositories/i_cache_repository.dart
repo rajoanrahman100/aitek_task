@@ -3,4 +3,5 @@ abstract class ICacheRepository {
   Future<String?> fetchToken();
   Future<void> saveLoginID(String loginID);
   Future<String?> fetchLoginID();
+  Future<void> clearSession();
 }

@@ -1,9 +1,13 @@
+import 'package:aitek_task/core/di/service_locator.dart';
+import 'package:aitek_task/core/repositories/i_cache_repository.dart';
 import 'package:aitek_task/core/theme/colors.dart';
 import 'package:aitek_task/core/theme/style.dart';
+import 'package:aitek_task/core/utils/app_navigation.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
 import 'package:aitek_task/feature/user_profile/data/models/user_information_response_model.dart';
 import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_state.dart';
+import 'package:aitek_task/landing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -21,6 +25,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
     context.read<UserProfileCubit>().getAccountInformation();
   }
 
+  Future<void> _logout() async {
+    await sl<ICacheRepository>().clearSession();
+
+    if (!mounted) return;
+
+    AppNavigator.pushAndRemove(context, const LandingScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,6 +41,14 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         title: const Text('User Profile'),
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
+        actions: [
+          IconButton(
+            tooltip: 'Logout',
+            onPressed: _logout,
+            icon: const Icon(Icons.logout),
+          ),
+          const SizedBox(width: 6),
+        ],
       ),
       body: SafeArea(
         child: BlocBuilder<UserProfileCubit, UserProfileState>(
