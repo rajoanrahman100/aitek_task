@@ -4,5 +4,10 @@ import 'package:aitek_task/feature/user_profile/domain/entities/user_information
 import 'package:dartz/dartz.dart';
 
 abstract class UserProfileRepository {
-  Future<Either<UserInformationErrorModel, UserInformationResponseModel>> getAccountInformation(UserInformationRequestParams params);
+  Future<Either<UserInformationErrorModel, UserInformationResponseModel>>
+  getAccountInformation(UserInformationRequestParams params);
+
+  Future<Either<UserInformationErrorModel, String>> getLastFourPhoneNumber(
+    UserInformationRequestParams params,
+  );
 }

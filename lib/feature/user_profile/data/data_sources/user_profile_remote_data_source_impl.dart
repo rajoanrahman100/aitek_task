@@ -10,7 +10,8 @@ import 'package:dartz/dartz.dart';
 
 class UserProfileRemoteDataSourceImpl extends UserProfileRemoteDataSource {
   @override
-  Future<Either<UserInformationErrorModel, UserInformationResponseModel>> getAccountInformation(UserInformationRequestParams params) async {
+  Future<Either<UserInformationErrorModel, UserInformationResponseModel>>
+  getAccountInformation(UserInformationRequestParams params) async {
     try {
       final response = await sl<DioClient>().post(
         ApiEndpoints.getAccountInformation,
@@ -19,7 +20,9 @@ class UserProfileRemoteDataSourceImpl extends UserProfileRemoteDataSource {
       );
 
       if (response.data is! Map<String, dynamic>) {
-        return const Left(UserInformationErrorModel(message: 'Invalid profile response'));
+        return const Left(
+          UserInformationErrorModel(message: 'Invalid profile response'),
+        );
       }
 
       return Right(UserInformationResponseModel.fromJson(response.data));
@@ -29,20 +32,72 @@ class UserProfileRemoteDataSourceImpl extends UserProfileRemoteDataSource {
         '(Status: ${e.statusCode}): ${e.message}\nResponse Data: ${e.responseData}',
       );
 
-      return Left(UserInformationErrorModel(message: _messageFromError(e), status: e.statusCode));
+      return Left(
+        UserInformationErrorModel(
+          message: _messageFromError(e),
+          status: e.statusCode,
+        ),
+      );
     } catch (e, stackTrace) {
-      logger.e('Unexpected exception in getAccountInformation', error: e, stackTrace: stackTrace);
+      logger.e(
+        'Unexpected exception in getAccountInformation',
+        error: e,
+        stackTrace: stackTrace,
+      );
+
+      return Left(UserInformationErrorModel(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<UserInformationErrorModel, String>> getLastFourPhoneNumber(
+    UserInformationRequestParams params,
+  ) async {
+    try {
+      final response = await sl<DioClient>().post(
+        ApiEndpoints.getLastFourPhoneNumber,
+        data: params.toMap(),
+        baseUrl: ApiEndpoints.peanutBaseUrl,
+      );
+
+      if (response.data is! String || response.data.toString().trim().isEmpty) {
+        return const Left(
+          UserInformationErrorModel(message: 'Invalid phone response'),
+        );
+      }
+
+      return Right(response.data.toString());
+    } on NetworkException catch (e) {
+      logger.w(
+        'Network error in getLastFourPhoneNumber '
+        '(Status: ${e.statusCode}): ${e.message}\nResponse Data: ${e.responseData}',
+      );
+
+      return Left(
+        UserInformationErrorModel(
+          message: _messageFromError(e),
+          status: e.statusCode,
+        ),
+      );
+    } catch (e, stackTrace) {
+      logger.e(
+        'Unexpected exception in getLastFourPhoneNumber',
+        error: e,
+        stackTrace: stackTrace,
+      );
 
       return Left(UserInformationErrorModel(message: e.toString()));
     }
   }
 
   String _messageFromError(NetworkException error) {
-    if (error.statusCode == 500 && error.responseData?.toString().trim() == 'Access Denied') {
+    if (error.statusCode == 500 &&
+        error.responseData?.toString().trim() == 'Access Denied') {
       return 'Access Denied';
     }
 
-    if (error.responseData is String && error.responseData.toString().trim().isNotEmpty) {
+    if (error.responseData is String &&
+        error.responseData.toString().trim().isNotEmpty) {
       return error.responseData.toString();
     }
 

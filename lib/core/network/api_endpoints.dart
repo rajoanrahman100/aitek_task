@@ -7,5 +7,8 @@ abstract final class ApiEndpoints {
   static const isAccountCredentialsCorrect = 'ClientCabinetBasic/IsAccountCredentialsCorrect';
   static const getLastFourPhoneNumber = 'ClientCabinetBasic/GetLastFourNumbersPhone';
   static const getAccountInformation = 'ClientCabinetBasic/GetAccountInformation';
+
+
+
   static const requestMobileCabinetApiToken = 'Authentication/RequestMoblieCabinetApiToken';
 }

@@ -5,4 +5,6 @@ import 'package:dartz/dartz.dart';
 
 abstract class UserProfileRemoteDataSource {
   Future<Either<UserInformationErrorModel, UserInformationResponseModel>> getAccountInformation(UserInformationRequestParams params);
+
+  Future<Either<UserInformationErrorModel, String>> getLastFourPhoneNumber(UserInformationRequestParams params);
 }

@@ -25,7 +25,11 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
-      appBar: AppBar(title: const Text('User Profile'), backgroundColor: Colors.white, surfaceTintColor: Colors.white),
+      appBar: AppBar(
+        title: const Text('User Profile'),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+      ),
       body: SafeArea(
         child: BlocBuilder<UserProfileCubit, UserProfileState>(
           builder: (context, state) {
@@ -38,7 +42,10 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             }
 
             if (state is UserProfileSuccess) {
-              return _ProfileContent(userInformation: state.userInformation);
+              return _ProfileContent(
+                userInformation: state.userInformation,
+                lastFourPhoneNumber: state.lastFourPhoneNumber,
+              );
             }
 
             return const SizedBox.shrink();
@@ -63,7 +70,11 @@ class _FailureView extends StatelessWidget {
         children: [
           const Icon(Icons.error_outline, size: 54, color: Colors.redAccent),
           const SizedBox(height: 14),
-          Text(message, textAlign: TextAlign.center, style: kMediumTextStyle.copyWith(fontSize: 16)),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: kMediumTextStyle.copyWith(fontSize: 16),
+          ),
           const SizedBox(height: 20),
           CustomButton(
             title: 'Try Again',
@@ -79,14 +90,18 @@ class _FailureView extends StatelessWidget {
 }
 
 class _ProfileContent extends StatelessWidget {
-  const _ProfileContent({required this.userInformation});
+  const _ProfileContent({
+    required this.userInformation,
+    required this.lastFourPhoneNumber,
+  });
 
   final UserInformationResponseModel userInformation;
+  final String lastFourPhoneNumber;
 
   @override
   Widget build(BuildContext context) {
     final profileItems = <_ProfileItem>[
-      _ProfileItem('Phone', userInformation.phone),
+      _ProfileItem('Phone', lastFourPhoneNumber),
       _ProfileItem('Country', userInformation.country),
       _ProfileItem('City', userInformation.city),
       _ProfileItem('Address', userInformation.address),
@@ -96,14 +111,29 @@ class _ProfileContent extends StatelessWidget {
       _ProfileItem('Free Margin', userInformation.freeMargin?.toString()),
       _ProfileItem('Currency', userInformation.currency?.toString()),
       _ProfileItem('Leverage', userInformation.leverage?.toString()),
-      _ProfileItem('Current Trades', userInformation.currentTradesCount?.toString()),
-      _ProfileItem('Current Volume', userInformation.currentTradesVolume?.toString()),
-      _ProfileItem('Total Trades', userInformation.totalTradesCount?.toString()),
-      _ProfileItem('Total Volume', userInformation.totalTradesVolume?.toString()),
+      _ProfileItem(
+        'Current Trades',
+        userInformation.currentTradesCount?.toString(),
+      ),
+      _ProfileItem(
+        'Current Volume',
+        userInformation.currentTradesVolume?.toString(),
+      ),
+      _ProfileItem(
+        'Total Trades',
+        userInformation.totalTradesCount?.toString(),
+      ),
+      _ProfileItem(
+        'Total Volume',
+        userInformation.totalTradesVolume?.toString(),
+      ),
       _ProfileItem('Open Trades', _formatBool(userInformation.isAnyOpenTrades)),
       _ProfileItem('Swap Free', _formatBool(userInformation.isSwapFree)),
       _ProfileItem('Type', userInformation.type?.toString()),
-      _ProfileItem('Verification Level', userInformation.verificationLevel?.toString()),
+      _ProfileItem(
+        'Verification Level',
+        userInformation.verificationLevel?.toString(),
+      ),
     ];
 
     return RefreshIndicator(
@@ -115,14 +145,24 @@ class _ProfileContent extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(18),
-            decoration: BoxDecoration(color: AppColor.primary, borderRadius: BorderRadius.circular(16)),
+            decoration: BoxDecoration(
+              color: AppColor.primary,
+              borderRadius: BorderRadius.circular(16),
+            ),
             child: Row(
               children: [
                 Container(
                   width: 54,
                   height: 54,
-                  decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.14), borderRadius: BorderRadius.circular(14)),
-                  child: const Icon(Icons.person_outline, color: Colors.white, size: 30),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.14),
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: const Icon(
+                    Icons.person_outline,
+                    color: Colors.white,
+                    size: 30,
+                  ),
                 ),
                 const SizedBox(width: 14),
                 Expanded(
@@ -130,13 +170,21 @@ class _ProfileContent extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        userInformation.name?.trim().isNotEmpty == true ? userInformation.name! : 'Peanut Account',
-                        style: kSemiBoldTextStyle.copyWith(color: Colors.white, fontSize: 18),
+                        userInformation.name?.trim().isNotEmpty == true
+                            ? userInformation.name!
+                            : 'Peanut Account',
+                        style: kSemiBoldTextStyle.copyWith(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         userInformation.country ?? 'Profile information',
-                        style: kRegularTextStyle.copyWith(color: Colors.white70, fontSize: 13),
+                        style: kRegularTextStyle.copyWith(
+                          color: Colors.white70,
+                          fontSize: 13,
+                        ),
                       ),
                     ],
                   ),
@@ -176,11 +224,18 @@ class _InfoTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            child: Text(item.label, style: kRegularTextStyle.copyWith(color: Colors.black54)),
+            child: Text(
+              item.label,
+              style: kRegularTextStyle.copyWith(color: Colors.black54),
+            ),
           ),
           const SizedBox(width: 14),
           Expanded(
-            child: Text(item.value?.trim().isNotEmpty == true ? item.value! : '-', textAlign: TextAlign.right, style: kMediumTextStyle),
+            child: Text(
+              item.value?.trim().isNotEmpty == true ? item.value! : '-',
+              textAlign: TextAlign.right,
+              style: kMediumTextStyle,
+            ),
           ),
         ],
       ),

@@ -13,12 +13,16 @@ class UserProfileInitial extends UserProfileState {}
 class UserProfileLoading extends UserProfileState {}
 
 class UserProfileSuccess extends UserProfileState {
-  const UserProfileSuccess(this.userInformation);
+  const UserProfileSuccess({
+    required this.userInformation,
+    required this.lastFourPhoneNumber,
+  });
 
   final UserInformationResponseModel userInformation;
+  final String lastFourPhoneNumber;
 
   @override
-  List<Object?> get props => [userInformation];
+  List<Object?> get props => [userInformation, lastFourPhoneNumber];
 }
 
 class UserProfileFailure extends UserProfileState {

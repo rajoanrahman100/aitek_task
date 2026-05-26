@@ -7,9 +7,15 @@ import 'package:aitek_task/feature/user_profile/domain/repositories/user_profile
 import 'package:dartz/dartz.dart';
 
 class GetAccountInformationUseCase
-    extends UseCase<Either<UserInformationErrorModel, UserInformationResponseModel>, UserInformationRequestParams> {
+    extends
+        UseCase<
+          Either<UserInformationErrorModel, UserInformationResponseModel>,
+          UserInformationRequestParams
+        > {
   @override
-  Future<Either<UserInformationErrorModel, UserInformationResponseModel>> call({UserInformationRequestParams? params}) async {
+  Future<Either<UserInformationErrorModel, UserInformationResponseModel>> call({
+    UserInformationRequestParams? params,
+  }) async {
     return await sl<UserProfileRepository>().getAccountInformation(params!);
   }
 }

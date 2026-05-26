@@ -16,6 +16,7 @@ import 'package:aitek_task/feature/user_profile/data/data_sources/user_profile_r
 import 'package:aitek_task/feature/user_profile/data/repositories/user_profile_repository_impl.dart';
 import 'package:aitek_task/feature/user_profile/domain/repositories/user_profile_repository.dart';
 import 'package:aitek_task/feature/user_profile/domain/usecases/get_account_information_use_case.dart';
+import 'package:aitek_task/feature/user_profile/domain/usecases/get_last_four_phone_number_use_case.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -58,5 +59,8 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<PartnerLoginUseCase>(() => PartnerLoginUseCase());
   sl.registerLazySingleton<GetAccountInformationUseCase>(
     () => GetAccountInformationUseCase(),
+  );
+  sl.registerLazySingleton<GetLastFourPhoneNumberUseCase>(
+    () => GetLastFourPhoneNumberUseCase(),
   );
 }

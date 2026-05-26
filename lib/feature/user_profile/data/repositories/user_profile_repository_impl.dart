@@ -8,7 +8,19 @@ import 'package:dartz/dartz.dart';
 
 class UserProfileRepositoryImpl extends UserProfileRepository {
   @override
-  Future<Either<UserInformationErrorModel, UserInformationResponseModel>> getAccountInformation(UserInformationRequestParams params) async {
-    return await sl<UserProfileRemoteDataSource>().getAccountInformation(params);
+  Future<Either<UserInformationErrorModel, UserInformationResponseModel>>
+  getAccountInformation(UserInformationRequestParams params) async {
+    return await sl<UserProfileRemoteDataSource>().getAccountInformation(
+      params,
+    );
+  }
+
+  @override
+  Future<Either<UserInformationErrorModel, String>> getLastFourPhoneNumber(
+    UserInformationRequestParams params,
+  ) async {
+    return await sl<UserProfileRemoteDataSource>().getLastFourPhoneNumber(
+      params,
+    );
   }
 }
