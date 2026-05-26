@@ -2,13 +2,13 @@ import 'package:aitek_task/core/di/service_locator.dart';
 import 'package:aitek_task/core/network/api_endpoints.dart';
 import 'package:aitek_task/core/network/dio_client.dart';
 import 'package:aitek_task/core/utils/logger.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/data/data_source/auth_api_service.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/data/data_sources/peanut_auth_remote_data_source.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/data/models/account_credential_error_response_model.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/data/models/account_credential_response_model.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/domain/request_param/login_request_params.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/domain/entities/login_request_params.dart';
 import 'package:dartz/dartz.dart';
 
-class AuthApiServiceImpl extends AuthApiService {
+class PeanutAuthRemoteDataSourceImpl extends PeanutAuthRemoteDataSource {
   @override
   Future<Either<AccountCredentialErrorResponseModel, AccountCredentialResponseModel>> peanutServiceLogin(LoginReqParams params) async {
     try {

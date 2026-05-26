@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => PeanutServiceLoginCubit()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
         home: PeanutServiceLoginScreen(),

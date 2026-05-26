@@ -1,13 +1,15 @@
 import 'package:aitek_task/core/repositories/cache_repository_impl.dart';
 import 'package:aitek_task/core/repositories/i_cache_repository.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/data/data_source/auth_api_service.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/data/repositories/auth_repository_impl.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/domain/usecases/authentication_usecases.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/data/data_sources/peanut_auth_remote_data_source.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/data/data_sources/peanut_auth_remote_data_source_impl.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/data/repositories/peanut_auth_repository_impl.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/domain/repositories/peanut_auth_repository.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/domain/usecases/peanut_login_use_case.dart';
+
 
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../feature/authentication/peanut_service/domain/repositories/auth_repository.dart';
 
 final sl = GetIt.instance;
 
@@ -17,11 +19,11 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ICacheRepository>(() => CacheRepositoryImpl(sharedPreference: sl()));
 
   //Api Services
-  sl.registerSingleton<AuthApiService>(AuthApiServiceImpl());
-  sl.registerSingleton<AuthApiServiceImpl>(AuthApiServiceImpl());
+  sl.registerSingleton<PeanutAuthRemoteDataSource>(PeanutAuthRemoteDataSourceImpl());
+  sl.registerSingleton<PeanutAuthRemoteDataSourceImpl>(PeanutAuthRemoteDataSourceImpl());
 
   //Repositories
-  sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
+  sl.registerSingleton<PeanutAuthRepository>(PeanutAuthRepositoryImpl());
 
 
   //Use Cases

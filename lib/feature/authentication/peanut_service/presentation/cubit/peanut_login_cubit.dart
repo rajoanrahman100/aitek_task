@@ -1,6 +1,6 @@
 import 'package:aitek_task/core/di/service_locator.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/domain/request_param/login_request_params.dart';
-import 'package:aitek_task/feature/authentication/peanut_service/domain/usecases/authentication_usecases.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/domain/entities/login_request_params.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/domain/usecases/peanut_login_use_case.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
