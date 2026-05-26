@@ -1,3 +1,4 @@
+import 'package:aitek_task/core/network/network_info.dart';
 import 'package:aitek_task/core/utils/logger.dart';
 import 'package:dio/dio.dart';
 
@@ -48,8 +49,12 @@ class UnknownNetworkException extends NetworkException {
 /// and dynamic base URL matching.
 class DioClient {
   final Dio _dio;
+  final ConnectivityService _connectivityService;
 
-  DioClient({Dio? dio}) : _dio = dio ?? Dio() {
+  DioClient({Dio? dio, ConnectivityService? connectivityService})
+    : _dio = dio ?? Dio(),
+      _connectivityService =
+          connectivityService ?? ConnectivityService.instance {
     _dio.options.connectTimeout = const Duration(seconds: 15);
     _dio.options.receiveTimeout = const Duration(seconds: 15);
     _dio.options.sendTimeout = const Duration(seconds: 15);
@@ -114,6 +119,8 @@ class DioClient {
     void Function(int, int)? onReceiveProgress,
     String? baseUrl,
   }) async {
+    await _ensureConnected();
+
     try {
       final url = _buildUrl(path, baseUrl);
       final response = await _dio.post<T>(
@@ -130,6 +137,13 @@ class DioClient {
       throw _handleDioException(e);
     } catch (e) {
       throw UnknownNetworkException(message: e.toString());
+    }
+  }
+
+  Future<void> _ensureConnected() async {
+    final isConnected = await _connectivityService.isConnected;
+    if (!isConnected) {
+      throw NoInternetException();
     }
   }
 

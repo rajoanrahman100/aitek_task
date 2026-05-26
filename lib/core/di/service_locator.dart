@@ -1,4 +1,5 @@
 import 'package:aitek_task/core/network/dio_client.dart';
+import 'package:aitek_task/core/network/network_info.dart';
 import 'package:aitek_task/core/repositories/cache_repository_impl.dart';
 import 'package:aitek_task/core/repositories/i_cache_repository.dart';
 import 'package:aitek_task/feature/authentication/partner_service/data/data_sources/partner_auth_remote_data_source.dart';
@@ -38,7 +39,12 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<ICacheRepository>(
     () => CacheRepositoryImpl(sharedPreference: sl()),
   );
-  sl.registerLazySingleton<DioClient>(() => DioClient());
+  sl.registerLazySingleton<ConnectivityService>(
+    () => ConnectivityService.instance,
+  );
+  sl.registerLazySingleton<DioClient>(
+    () => DioClient(connectivityService: sl()),
+  );
 
   //Api Services
   sl.registerLazySingleton<PeanutAuthRemoteDataSource>(
