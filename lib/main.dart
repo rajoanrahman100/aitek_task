@@ -1,6 +1,7 @@
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_cubit.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_cubit.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/cubit/partner_signal_archive_cubit.dart';
+import 'package:aitek_task/feature/partner_signal_archive/presentation/partner_signal_archive_screen.dart';
 import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:aitek_task/feature/user_profile/presentation/screens/user_profile_screen.dart';
 import 'package:aitek_task/landing_screen.dart';
@@ -21,13 +22,26 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  Future<bool> _hasPeanutSession() async {
-    final loginId = await sl<ICacheRepository>().fetchLoginID();
-    final token = await sl<ICacheRepository>().fetchToken();
+  Future<_StartupDestination> _startupDestination() async {
+    final cache = sl<ICacheRepository>();
 
-    return int.tryParse(loginId ?? '') != null &&
-        token != null &&
-        token.trim().isNotEmpty;
+    final partnerLoginId = await cache.fetchPartnerLoginID();
+    final partnerToken = await cache.fetchPartnerToken();
+    final hasPartnerSession = int.tryParse(partnerLoginId ?? '') != null && partnerToken != null && partnerToken.trim().isNotEmpty;
+
+    if (hasPartnerSession) {
+      return _StartupDestination.partnerSignals;
+    }
+
+    final peanutLoginId = await cache.fetchLoginID();
+    final peanutToken = await cache.fetchToken();
+    final hasPeanutSession = int.tryParse(peanutLoginId ?? '') != null && peanutToken != null && peanutToken.trim().isNotEmpty;
+
+    if (hasPeanutSession) {
+      return _StartupDestination.peanutProfile;
+    }
+
+    return _StartupDestination.landing;
   }
 
   // This widget is the root of your application.
@@ -44,23 +58,27 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.deepPurple)),
-        home: FutureBuilder<bool>(
-          future: _hasPeanutSession(),
+        home: FutureBuilder<_StartupDestination>(
+          future: _startupDestination(),
           builder: (context, snapshot) {
             if (snapshot.connectionState != ConnectionState.done) {
-              return const Scaffold(
-                body: Center(child: CircularProgressIndicator()),
-              );
+              return const Scaffold(body: Center(child: CircularProgressIndicator()));
             }
 
-            if (snapshot.data == true) {
-              return const UserProfileScreen();
+            switch (snapshot.data) {
+              case _StartupDestination.partnerSignals:
+                return const PartnerSignalArchiveScreen();
+              case _StartupDestination.peanutProfile:
+                return const UserProfileScreen();
+              case _StartupDestination.landing:
+              case null:
+                return const LandingScreen();
             }
-
-            return const LandingScreen();
           },
         ),
       ),
     );
   }
 }
+
+enum _StartupDestination { landing, peanutProfile, partnerSignals }

@@ -1,9 +1,13 @@
+import 'package:aitek_task/core/di/service_locator.dart';
+import 'package:aitek_task/core/repositories/i_cache_repository.dart';
 import 'package:aitek_task/core/theme/colors.dart';
 import 'package:aitek_task/core/theme/style.dart';
+import 'package:aitek_task/core/utils/app_navigation.dart';
 import 'package:aitek_task/core/widgets/custom_button.dart';
 import 'package:aitek_task/feature/partner_signal_archive/data/models/trading_signal_request_model.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/cubit/partner_signal_archive_cubit.dart';
 import 'package:aitek_task/feature/partner_signal_archive/presentation/cubit/partner_signal_archive_state.dart';
+import 'package:aitek_task/landing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,14 +15,27 @@ class PartnerSignalArchiveScreen extends StatefulWidget {
   const PartnerSignalArchiveScreen({super.key});
 
   @override
-  State<PartnerSignalArchiveScreen> createState() => _PartnerSignalArchiveScreenState();
+  State<PartnerSignalArchiveScreen> createState() =>
+      _PartnerSignalArchiveScreenState();
 }
 
-class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen> {
-  static const _availablePairs = <String>['GBPJPY', 'EURJPY', 'EURUSD', 'GBPUSD', 'USDJPY', 'AUDUSD', 'USDCAD'];
+class _PartnerSignalArchiveScreenState
+    extends State<PartnerSignalArchiveScreen> {
+  static const _availablePairs = <String>[
+    'GBPJPY',
+    'EURJPY',
+    'EURUSD',
+    'GBPUSD',
+    'USDJPY',
+    'AUDUSD',
+    'USDCAD',
+  ];
 
   final Set<String> _selectedPairs = {'GBPJPY', 'EURJPY'};
-  DateTimeRange _dateRange = DateTimeRange(start: DateTime.now().subtract(const Duration(days: 30)), end: DateTime.now());
+  DateTimeRange _dateRange = DateTimeRange(
+    start: DateTime.now().subtract(const Duration(days: 30)),
+    end: DateTime.now(),
+  );
 
   Future<void> _pickDateRange() async {
     final range = await showDateRangePicker(
@@ -37,20 +54,49 @@ class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen>
     context.read<PartnerSignalArchiveCubit>().loadSignals(
       pairs: _selectedPairs.toList(),
       from: _dateRange.start,
-      to: DateTime(_dateRange.end.year, _dateRange.end.month, _dateRange.end.day, 23, 59, 59),
+      to: DateTime(
+        _dateRange.end.year,
+        _dateRange.end.month,
+        _dateRange.end.day,
+        23,
+        59,
+        59,
+      ),
     );
+  }
+
+  Future<void> _logout() async {
+    await sl<ICacheRepository>().clearPartnerSession();
+
+    if (!mounted) return;
+
+    AppNavigator.pushAndRemove(context, const LandingScreen());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF7F8FA),
-      appBar: AppBar(title: const Text('Signal Archive'), backgroundColor: Colors.white, surfaceTintColor: Colors.white),
+      appBar: AppBar(
+        title: const Text('Signal Archive'),
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        actions: [
+          IconButton(
+            tooltip: 'Logout',
+            onPressed: _logout,
+            icon: const Icon(Icons.logout),
+          ),
+          const SizedBox(width: 6),
+        ],
+      ),
       body: SafeArea(
         child: BlocConsumer<PartnerSignalArchiveCubit, PartnerSignalArchiveState>(
           listener: (context, state) {
             if (state is PartnerSignalArchiveFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(SnackBar(content: Text(state.message)));
             }
           },
           builder: (context, state) {
@@ -62,11 +108,17 @@ class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen>
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
                     children: [
-                      Text('Trading signals', style: kBoldTextStyle.copyWith(fontSize: 24)),
+                      Text(
+                        'Trading signals',
+                        style: kBoldTextStyle.copyWith(fontSize: 24),
+                      ),
                       const SizedBox(height: 8),
                       Text(
                         'Select pairs and a date range to load Partner signal history.',
-                        style: kRegularTextStyle.copyWith(color: Colors.black54, height: 1.35),
+                        style: kRegularTextStyle.copyWith(
+                          color: Colors.black54,
+                          height: 1.35,
+                        ),
                       ),
                       const SizedBox(height: 22),
                       Text('Currency pairs', style: kMediumTextStyle),
@@ -90,7 +142,9 @@ class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen>
                                       }
                                     });
                                   },
-                            selectedColor: AppColor.primary.withValues(alpha: 0.14),
+                            selectedColor: AppColor.primary.withValues(
+                              alpha: 0.14,
+                            ),
                             checkmarkColor: AppColor.primary,
                           );
                         }).toList(),
@@ -102,7 +156,10 @@ class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen>
                         onTap: isLoading ? null : _pickDateRange,
                         borderRadius: BorderRadius.circular(12),
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 14,
+                            vertical: 14,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(12),
@@ -113,7 +170,10 @@ class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen>
                               const Icon(Icons.date_range_outlined, size: 20),
                               const SizedBox(width: 10),
                               Expanded(
-                                child: Text('${_formatDate(_dateRange.start)} - ${_formatDate(_dateRange.end)}', style: kRegularTextStyle),
+                                child: Text(
+                                  '${_formatDate(_dateRange.start)} - ${_formatDate(_dateRange.end)}',
+                                  style: kRegularTextStyle,
+                                ),
                               ),
                             ],
                           ),
@@ -131,7 +191,14 @@ class _PartnerSignalArchiveScreenState extends State<PartnerSignalArchiveScreen>
                     textColor: Colors.white,
                     onPress: isLoading ? null : _loadSignals,
                     child: isLoading
-                        ? const SizedBox(width: 22, height: 22, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                        ? const SizedBox(
+                            width: 22,
+                            height: 22,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
+                          )
                         : null,
                   ),
                 ),
@@ -156,7 +223,10 @@ class _SignalStateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state is PartnerSignalArchiveInitial) {
-      return _EmptyMessage(icon: Icons.timeline_outlined, message: 'No signals loaded yet.');
+      return _EmptyMessage(
+        icon: Icons.timeline_outlined,
+        message: 'No signals loaded yet.',
+      );
     }
 
     if (state is PartnerSignalArchiveLoading) {
@@ -174,10 +244,17 @@ class _SignalStateView extends StatelessWidget {
     if (state is PartnerSignalArchiveSuccess) {
       final success = state as PartnerSignalArchiveSuccess;
       if (success.signals.isEmpty) {
-        return _EmptyMessage(icon: Icons.search_off_outlined, message: 'No signals found for this selection.');
+        return _EmptyMessage(
+          icon: Icons.search_off_outlined,
+          message: 'No signals found for this selection.',
+        );
       }
 
-      return Column(children: success.signals.map((signal) => _SignalCard(signal: signal)).toList());
+      return Column(
+        children: success.signals
+            .map((signal) => _SignalCard(signal: signal))
+            .toList(),
+      );
     }
 
     return const SizedBox.shrink();
@@ -235,13 +312,24 @@ class _SignalCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: Text(signal.pair ?? 'Unknown Pair', style: kSemiBoldTextStyle.copyWith(fontSize: 16))),
-              Text(_commandLabel(signal.cmd), style: kMediumTextStyle.copyWith(color: AppColor.primary)),
+              Expanded(
+                child: Text(
+                  signal.pair ?? 'Unknown Pair',
+                  style: kSemiBoldTextStyle.copyWith(fontSize: 16),
+                ),
+              ),
+              Text(
+                _commandLabel(signal.cmd),
+                style: kMediumTextStyle.copyWith(color: AppColor.primary),
+              ),
             ],
           ),
           if (signal.comment?.trim().isNotEmpty == true) ...[
             const SizedBox(height: 8),
-            Text(signal.comment!, style: kRegularTextStyle.copyWith(color: Colors.black54)),
+            Text(
+              signal.comment!,
+              style: kRegularTextStyle.copyWith(color: Colors.black54),
+            ),
           ],
           const SizedBox(height: 12),
           Wrap(
@@ -281,8 +369,14 @@ class _Metric extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-      decoration: BoxDecoration(color: const Color(0xFFF0F2F5), borderRadius: BorderRadius.circular(8)),
-      child: Text('$label: ${value?.trim().isNotEmpty == true ? value : '-'}', style: kRegularTextStyle.copyWith(fontSize: 12)),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF0F2F5),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        '$label: ${value?.trim().isNotEmpty == true ? value : '-'}',
+        style: kRegularTextStyle.copyWith(fontSize: 12),
+      ),
     );
   }
 }
