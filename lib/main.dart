@@ -1,5 +1,6 @@
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_cubit.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/cubit/peanut_login_cubit.dart';
+import 'package:aitek_task/feature/user_profile/presentation/cubit/user_profile_cubit.dart';
 import 'package:aitek_task/landing_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider(create: (context) => PeanutServiceLoginCubit()),
         BlocProvider(create: (context) => PartnerLoginCubit()),
+        BlocProvider(create: (context) => UserProfileCubit()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
