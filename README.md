@@ -2,6 +2,18 @@
 
 Flutter implementation for Peanut Service authorization, Partner Service authorization, user profile retrieval, trading signal archive, and promo materials.
 
+## Screenshots
+
+![Screenshot 1](screenshots/1000003645.png)
+
+![Screenshot 2](screenshots/1000003644.png)
+
+![Screenshot 3](screenshots/1000003642.png)
+
+![Screenshot 4](screenshots/1000003640.png)
+
+![Screenshot 5](screenshots/1000003641.png)
+
 ## Reusable Verification Module Flow
 
 The authentication and verification-related flows were organized as self-contained feature modules under `lib/feature`. Each backend flow has its own directory and owns its UI, state, use cases, repository contracts, repository implementations, data sources, request params, and response models.
