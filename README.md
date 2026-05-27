@@ -4,15 +4,13 @@ Flutter implementation for Peanut Service authorization, Partner Service authori
 
 ## Screenshots
 
-![Screenshot 1](screenshots/1000003645.png)
-
-![Screenshot 2](screenshots/1000003644.png)
-
-![Screenshot 3](screenshots/1000003642.png)
-
-![Screenshot 4](screenshots/1000003640.png)
-
-![Screenshot 5](screenshots/1000003641.png)
+<p>
+  <img src="screenshots/1000003645.png" width="180" alt="Screenshot 1" />
+  <img src="screenshots/1000003644.png" width="180" alt="Screenshot 2" />
+  <img src="screenshots/1000003642.png" width="180" alt="Screenshot 3" />
+  <img src="screenshots/1000003640.png" width="180" alt="Screenshot 4" />
+  <img src="screenshots/1000003641.png" width="180" alt="Screenshot 5" />
+</p>
 
 ## Reusable Verification Module Flow
 
