@@ -3,6 +3,7 @@ import 'package:aitek_task/core/repositories/i_cache_repository.dart';
 import 'package:aitek_task/feature/authentication/partner_service/domain/entities/partner_login_request_params.dart';
 import 'package:aitek_task/feature/authentication/partner_service/domain/usecases/partner_login_use_case.dart';
 import 'package:aitek_task/feature/authentication/partner_service/presentation/cubit/partner_login_state.dart';
+import 'package:aitek_task/feature/authentication/peanut_service/data/repositories/peanut_auth_repository_impl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PartnerLoginCubit extends Cubit<PartnerLoginState> {

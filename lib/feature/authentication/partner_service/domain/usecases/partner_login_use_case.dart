@@ -6,18 +6,9 @@ import 'package:aitek_task/feature/authentication/partner_service/domain/entitie
 import 'package:aitek_task/feature/authentication/partner_service/domain/repositories/partner_auth_repository.dart';
 import 'package:dartz/dartz.dart';
 
-class PartnerLoginUseCase
-    extends
-        UseCase<
-          Either<PartnerTokenErrorModel, PartnerTokenResponseModel>,
-          PartnerLoginRequestParams
-        > {
+class PartnerLoginUseCase extends UseCase<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>, PartnerLoginRequestParams> {
   @override
-  Future<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>> call({
-    PartnerLoginRequestParams? params,
-  }) async {
-    return await sl<PartnerAuthRepository>().requestMobileCabinetApiToken(
-      params!,
-    );
+  Future<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>> call({PartnerLoginRequestParams? params}) async {
+    return await sl<PartnerAuthRepository>().requestMobileCabinetApiToken(params!);
   }
 }

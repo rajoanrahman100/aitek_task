@@ -5,6 +5,7 @@ import 'package:aitek_task/core/widgets/custom_button.dart';
 import 'package:aitek_task/core/widgets/responsive_content.dart';
 import 'package:aitek_task/feature/authentication/partner_service/presentation/screens/partner_service_login_screen.dart';
 import 'package:aitek_task/feature/authentication/peanut_service/presentation/screens/peanut_service_login_screen.dart';
+import 'package:aitek_task/feature/search_placeholder/presentation/screens/search_place_holder_new_screen.dart';
 import 'package:aitek_task/feature/promo_materials/presentation/screens/promo_materials_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -76,6 +77,18 @@ class LandingScreen extends StatelessWidget {
                 subtitle: 'Browse company promo creatives and links',
                 onTap: () {
                   AppNavigator.push(context, const PromoMaterialsScreen());
+                },
+              ),
+              const SizedBox(height: 14),
+              _ServiceOption(
+                icon: Icons.search_rounded,
+                title: 'Search UI Preview',
+                subtitle: 'Open the refreshed SearchPlaceHolderNew page',
+                onTap: () {
+                  AppNavigator.push(
+                    context,
+                    const SearchPlaceHolderNewScreen(),
+                  );
                 },
               ),
               const SizedBox(height: 24),

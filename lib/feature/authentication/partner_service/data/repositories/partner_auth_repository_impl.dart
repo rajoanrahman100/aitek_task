@@ -8,10 +8,7 @@ import 'package:dartz/dartz.dart';
 
 class PartnerAuthRepositoryImpl extends PartnerAuthRepository {
   @override
-  Future<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>>
-  requestMobileCabinetApiToken(PartnerLoginRequestParams params) async {
-    return await sl<PartnerAuthRemoteDataSource>().requestMobileCabinetApiToken(
-      params,
-    );
+  Future<Either<PartnerTokenErrorModel, PartnerTokenResponseModel>> requestMobileCabinetApiToken(PartnerLoginRequestParams params) async {
+    return await sl<PartnerAuthRemoteDataSource>().requestMobileCabinetApiToken(params);
   }
 }
